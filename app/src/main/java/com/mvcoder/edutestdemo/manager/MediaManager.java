@@ -19,9 +19,9 @@ public class MediaManager {
     private static AudioTrack audioTrack;
 
     public static void playPCM(String filePath, MediaPlayer.OnCompletionListener onCompletionListener){
-        int bufferSize = AudioRecord.getMinBufferSize(44100,AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
+        int bufferSize = AudioRecord.getMinBufferSize(44100,AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
         if(audioTrack == null){
-            audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM);
+            audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM);
         }
         audioTrack.play();
         byte[] buffer = new byte[bufferSize];
