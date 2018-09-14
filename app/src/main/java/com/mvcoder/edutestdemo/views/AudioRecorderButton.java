@@ -9,13 +9,14 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.mvcoder.edutestdemo.R;
+import com.mvcoder.edutestdemo.manager.AudioManager;
 import com.mvcoder.edutestdemo.manager.AudioRecorderManager;
 import com.mvcoder.edutestdemo.manager.DialogManager;
 import com.mvcoder.edutestdemo.utils.LogUtil;
 
 import java.io.File;
 
-public class AudioRecorderButton extends android.support.v7.widget.AppCompatButton implements AudioRecorderManager.AudioStateListener{
+public class AudioRecorderButton extends android.support.v7.widget.AppCompatButton implements AudioManager.AudioStateListener /*AudioRecorderManager.AudioStateListener*/{
     //手指滑动 距离
     private static final int DISTANCE_Y_CANCEL = 50;
     //状态
@@ -28,8 +29,8 @@ public class AudioRecorderButton extends android.support.v7.widget.AppCompatButt
     private boolean isRecording = false;
 
     private DialogManager mDialogManager;
-    //private AudioManager mAudioManager;
-    private AudioRecorderManager mAudioRecorderManager;
+    private AudioManager mAudioManager;
+    //private AudioRecorderManager mAudioRecorderManager;
 
     private int audioTime = 0;
 
@@ -49,18 +50,18 @@ public class AudioRecorderButton extends android.support.v7.widget.AppCompatButt
          String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) + "/recorder_audios";
          File audioDir = new File(dir);
          if(!audioDir.exists()) audioDir.mkdirs();
-        mAudioRecorderManager = new AudioRecorderManager(dir);
-        mAudioRecorderManager.setOnAudioStateListener(this);
-        //mAudioManager = new AudioManager(dir);
-        //mAudioManager.setOnAudioStateListener(this);
+        //mAudioRecorderManager = new AudioRecorderManager(dir);
+        //mAudioRecorderManager.setOnAudioStateListener(this);
+        mAudioManager = new AudioManager(dir);
+        mAudioManager.setOnAudioStateListener(this);
         //按钮长按 准备录音 包括start
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 mReady = true;
-                //mAudioManager.prepareAudio();
-                mAudioRecorderManager.createDefaultAudio();
-                mAudioRecorderManager.startRecording();
+                mAudioManager.prepareAudio();
+                //mAudioRecorderManager.createDefaultAudio();
+               // mAudioRecorderManager.startRecording();
                 return false;
             }
         });
@@ -120,7 +121,7 @@ public class AudioRecorderButton extends android.support.v7.widget.AppCompatButt
                     break;
                 case MSG_AUDIO_FINISH:
                     if (mListener != null) {
-                        mListener.onFinish(audioTime ,mAudioRecorderManager.getCurrentFilePath());
+                        mListener.onFinish(audioTime , mAudioManager.getCurrentFilePath()/*mAudioRecorderManager.getCurrentFilePath()*/);
                     }
                     audioTime = 0;
                     break;
@@ -133,10 +134,10 @@ public class AudioRecorderButton extends android.support.v7.widget.AppCompatButt
         mHandler.sendEmptyMessage(MSG_AUDIO_PREPARED);
     }
 
-    @Override
+    /*@Override
     public void saveFileFinish() {
         mHandler.sendEmptyMessage(MSG_AUDIO_FINISH);
-    }
+    }*/
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -175,15 +176,16 @@ public class AudioRecorderButton extends android.support.v7.widget.AppCompatButt
                 //所以消除文件夹
                 if(!isRecording||mTime<0.6f){
                     mDialogManager.tooShort();
-                    //mAudioManager.cancel();
-                    mAudioRecorderManager.cancel();
+                    mAudioManager.cancel();
+                    //mAudioRecorderManager.cancel();
                     mHandler.sendEmptyMessageDelayed(MSG_DIALOG_DIMISS, 1300);
                 }else if(mCurState==STATE_RECORDING){//正常录制结束
-
                     mDialogManager.dimissDialog();
-                    //mAudioManager.release();
-                    mAudioRecorderManager.release();
-
+                    mAudioManager.release();
+                   // mAudioRecorderManager.release();
+                    if(mListener != null){
+                        mListener.onFinish(mTime, mAudioManager.getCurrentFilePath());
+                    }
 
                 }else if (mCurState == STATE_RECORDING) {
 
@@ -192,8 +194,8 @@ public class AudioRecorderButton extends android.support.v7.widget.AppCompatButt
                     //callbacktoAct
                 } else if (mCurState == STATE_WANT_TO_CANCEL) {
                     mDialogManager.dimissDialog();
-                   // mAudioManager.cancel();
-                    mAudioRecorderManager.cancel();
+                    mAudioManager.cancel();
+                    //mAudioRecorderManager.cancel();
                     //cancel
                 }
                 audioTime = Math.round(mTime);

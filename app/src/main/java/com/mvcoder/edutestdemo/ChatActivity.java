@@ -67,7 +67,14 @@ public class ChatActivity extends AppCompatActivity {
                 animation.start();*/
 
                 //播放音频  完成后改回原来的background
-                MediaManager.playPCM(mDatas.get(position).getFilePath(), new MediaPlayer.OnCompletionListener() {
+                /*MediaManager.playPCM(mDatas.get(position).getFilePath(), new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        //mAnimView.setBackgroundResource(R.drawable.adj);
+                    }
+                });
+*/
+                MediaManager.playSound(mDatas.get(position).getFilePath(), new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         //mAnimView.setBackgroundResource(R.drawable.adj);
