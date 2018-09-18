@@ -12,6 +12,9 @@ public class Constants {
     public static final String NETWORK_TIME_OUT = "请求超时，请检查与服务器的连接";
     public static final String NETWORK_SERVER_ERROR = "服务器内部异常";
 
+    public static final int RXCODE_UPLOAD_FILE = 10;
+    public static final int RXCODE_DOWNLOAD_FILE = 11;
+
     public static final int throttleFirstTime = 1000;
 
     public static final String cacheFileName = "mcache";

@@ -8,10 +8,10 @@
     tools:context="com.mvcoder.edutestdemo.ChatActivity">
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_talk_records"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:id="@+id/rv_talk_records"
         android:background="#ebebeb"
         android:divider="@null"
         android:dividerHeight="10dp">
@@ -21,32 +21,81 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:background="#ccc"
-            />
+            android:background="#ccc" />
 
-        <com.mvcoder.edutestdemo.views.AudioRecorderButton
-            android:id="@+id/id_recorder_button"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:gravity="center"
-            android:layout_marginTop="7dp"
-            android:layout_marginBottom="7dp"
-            android:padding="5dp"
-            android:text="@string/str_recorder_normal"
-            android:textColor="#727272"
-            android:background="@drawable/btn_recorder_normal"
-            android:minHeight="0dp"
+            android:orientation="horizontal"
             >
 
-        </com.mvcoder.edutestdemo.views.AudioRecorderButton>
+            <ImageView
+                android:id="@+id/iv_keybroad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_keybroad"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                />
 
+            <LinearLayout
+                android:id="@+id/ll_type_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    />
+
+                <Button
+                    android:id="@+id/bt_send"
+                    android:layout_width="50dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/chat_bg_green"
+                    android:textSize="12sp"
+                    android:text="send"
+                    />
+
+            </LinearLayout>
+
+            <com.mvcoder.edutestdemo.views.AudioRecorderButton
+                android:id="@+id/id_recorder_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/btn_recorder_normal"
+
+                android:gravity="center"
+                android:minHeight="0dp"
+                android:padding="5dp"
+                android:text="@string/str_recorder_normal"
+                android:textColor="#727272">
+
+            </com.mvcoder.edutestdemo.views.AudioRecorderButton>
+
+
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

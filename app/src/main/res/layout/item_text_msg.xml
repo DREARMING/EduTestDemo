@@ -20,6 +20,8 @@
     <LinearLayout
         android:id="@+id/id_recorder_length"
         android:layout_width="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:minWidth="50dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -27,27 +29,17 @@
         android:layout_toLeftOf="@id/id_icon"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/char_bg_green_normal"
+        android:background="@drawable/chat_bg_green"
         >
 
-        <View
-            android:id="@+id/id_recorder_anim"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center_vertical|right"
-            android:background="@mipmap/ic_left_sound"
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:text="Hello world"
             />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/id_recorder_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/id_recorder_length"
-        android:layout_marginRight="3dp"
-        android:textColor="@android:color/black"
-        android:layout_centerVertical="true"
-        />
 
 </RelativeLayout>

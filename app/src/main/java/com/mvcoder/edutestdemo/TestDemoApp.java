@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.blankj.utilcode.util.Utils;
 import com.mvcoder.edutestdemo.utils.LogUtil;
+import com.mvcoder.edutestdemo.utils.Network;
 
 public class TestDemoApp extends Application {
 
@@ -11,6 +12,7 @@ public class TestDemoApp extends Application {
     public void onCreate() {
         super.onCreate();
         Utils.init(this);
+        Network.getInstance().init(this);
         LogUtil.init(BuildConfig.DEBUG, TestDemoApp.class.getSimpleName());
     }
 }

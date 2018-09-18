@@ -10,7 +10,6 @@ import com.mvcoder.edutestdemo.utils.LogUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
@@ -139,9 +138,7 @@ public class AudioRecorderManager {
             if(mListener != null){
                 mListener.saveFileFinish();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        }  catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {

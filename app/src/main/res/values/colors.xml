@@ -6,5 +6,6 @@
 
     <color name="dialog_bg">#99000000</color>
     <color name="chat_record_bg_green">#55ff55</color>
+    <color name="chat_record_bg_green_pressed">#aa55ff55</color>
 
 </resources>

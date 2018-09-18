@@ -10,7 +10,6 @@ import android.view.View;
 
 import com.mvcoder.edutestdemo.R;
 import com.mvcoder.edutestdemo.manager.AudioManager;
-import com.mvcoder.edutestdemo.manager.AudioRecorderManager;
 import com.mvcoder.edutestdemo.manager.DialogManager;
 import com.mvcoder.edutestdemo.utils.LogUtil;
 
@@ -47,7 +46,7 @@ public class AudioRecorderButton extends android.support.v7.widget.AppCompatButt
         mDialogManager = new DialogManager(getContext());
         //偷个懒，并没有判断 是否存在， 是否可读。
 
-         String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) + "/recorder_audios";
+         String dir = Environment.getExternalStorageDirectory() + "/recorder_audios/";
          File audioDir = new File(dir);
          if(!audioDir.exists()) audioDir.mkdirs();
         //mAudioRecorderManager = new AudioRecorderManager(dir);
