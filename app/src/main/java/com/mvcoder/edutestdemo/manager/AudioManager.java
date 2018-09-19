@@ -2,6 +2,8 @@ package com.mvcoder.edutestdemo.manager;
 
 import android.media.MediaRecorder;
 
+import com.mvcoder.edutestdemo.utils.LogUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -14,7 +16,7 @@ public class AudioManager {
 
     private static AudioManager mInstance;
 
-    private boolean isPrepared;
+    private volatile boolean isPrepared;
     public AudioManager(String dir){
         mDir = dir;
     }
@@ -50,6 +52,7 @@ public class AudioManager {
      */
     public void prepareAudio() {
         try {
+            long time = System.currentTimeMillis();
             isPrepared = false;
             File dir = new File(mDir);
             if (!dir.exists()) {
@@ -79,6 +82,7 @@ public class AudioManager {
             if (mListener != null) {
                 mListener.wellPrepared();
             }
+            LogUtil.d("waste time : " + (System.currentTimeMillis() - time));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -104,17 +108,38 @@ public class AudioManager {
     }
 
     public void release() {
-        mMediaRecorder.stop();
-        mMediaRecorder.release();
-        mMediaRecorder = null;
+        if(!isPrepared) return;
+        try {
+            mMediaRecorder.stop();
+        }catch (Exception e){
+            e.printStackTrace();
+            if (mCurrentFilePath != null) {
+                File file = new File(mCurrentFilePath);
+                file.delete();
+                mCurrentFilePath = null;
+            }
+        }finally {
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+            isPrepared = false;
+        }
     }
 
     public void cancel(){
-        release();
-        if(mCurrentFilePath!=null) {
-            File file = new File(mCurrentFilePath);
-            file.delete();
-            mCurrentFilePath = null;
+        if(!isPrepared) return;
+        try {
+            mMediaRecorder.stop();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+            isPrepared = false;
+            if (mCurrentFilePath != null) {
+                File file = new File(mCurrentFilePath);
+                file.delete();
+                mCurrentFilePath = null;
+            }
         }
     }
     public String getCurrentFilePath() {

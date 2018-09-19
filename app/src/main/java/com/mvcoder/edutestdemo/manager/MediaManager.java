@@ -72,6 +72,7 @@ public class MediaManager {
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mMediaPlayer.setOnCompletionListener(onCompletionListener);
             mMediaPlayer.setDataSource(filePath);
+            mMediaPlayer.setVolume(1,1);
             mMediaPlayer.prepare();
             mMediaPlayer.start();
 
