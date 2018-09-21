@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     Button btDel;
     @BindView(R.id.bt_update)
     Button btUpdate;
+    @BindView(R.id.bt_live)
+    Button btLive;
 
 
     @Override
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         }
     }
 
-    @OnClick({R.id.bt_add, R.id.bt_del, R.id.bt_update})
+    @OnClick({R.id.bt_add, R.id.bt_del, R.id.bt_update, R.id.bt_live})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_add:
@@ -100,22 +102,30 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             case R.id.bt_update:
                 updChatRoom();
                 break;
+            case R.id.bt_live:
+                joinToLiveActivity();
+                break;
         }
+    }
+
+    private void joinToLiveActivity(){
+        Intent intent = new Intent(this, LiveActivity.class);
+        startActivity(intent);
     }
 
     private int chatRoomId = 1;
     private String members = "1,2";
     private String newMembers = "1,2,3";
 
-    private void addChatRoom(){
-        Network.getInstance().chatRoomApi().createChatRoom(chatRoomId,members)
+    private void addChatRoom() {
+        Network.getInstance().chatRoomApi().createChatRoom(chatRoomId, members)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<MResponse>() {
                     @Override
                     public void onSuccess(MResponse mResponse) {
-                        if(mResponse.code == 200){
+                        if (mResponse.code == 200) {
                             ToastUtils.showShort("创建ChatRoom成功");
-                        }else{
+                        } else {
                             ToastUtils.showShort("创建ChatRoom失败");
                         }
                     }
@@ -128,15 +138,15 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
 
-    private void delChatRoom(){
+    private void delChatRoom() {
         Network.getInstance().chatRoomApi().deleteChatRoom(chatRoomId)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<MResponse>() {
                     @Override
                     public void onSuccess(MResponse mResponse) {
-                        if(mResponse.code == 200){
+                        if (mResponse.code == 200) {
                             ToastUtils.showShort("删除ChatRoom成功");
-                        }else{
+                        } else {
                             ToastUtils.showShort("删除ChatRoom失败");
                         }
                     }
@@ -148,15 +158,15 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 });
     }
 
-    private void updChatRoom(){
-        Network.getInstance().chatRoomApi().updateChatRoom(chatRoomId,newMembers)
+    private void updChatRoom() {
+        Network.getInstance().chatRoomApi().updateChatRoom(chatRoomId, newMembers)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<MResponse>() {
                     @Override
                     public void onSuccess(MResponse mResponse) {
-                        if(mResponse.code == 200){
+                        if (mResponse.code == 200) {
                             ToastUtils.showShort("更新ChatRoom成功");
-                        }else{
+                        } else {
                             ToastUtils.showShort("更新ChatRoom失败");
                         }
                     }
@@ -167,5 +177,4 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     }
                 });
     }
-
 }

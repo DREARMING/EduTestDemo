@@ -74,15 +74,15 @@ public class Network implements RxActionManager<String> {
 
     private Retrofit createRetrofit(){
         // String url = PreferenceUtil.IPSetting.getIP();
-        String url = "192.168.2.110";
-        int port = 8081;
+        String url = "192.168.1.67";
+        int port = 3001;
         Gson gson = new GsonBuilder().setLenient()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl("http://" + url + ":" + port+"/pcbox/")
+                .baseUrl("http://" + url + ":" + port+"/")
                 .client(client)
                 .build();
         return retrofit;

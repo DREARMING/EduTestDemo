@@ -87,7 +87,7 @@ public class ChatActivity extends AppCompatActivity {
     private boolean isConnected = false;
     private boolean hasSendID = false;
 
-    private static final String CHAT_SERVER_URL = "http://192.168.1.67:3000/";
+    private static final String CHAT_SERVER_URL = "http://192.168.1.67:3001/";
 
     private static final String TXT_MSG = "new_txt_msg";
     private static final String FILE_MSG = "new_file_msg";
