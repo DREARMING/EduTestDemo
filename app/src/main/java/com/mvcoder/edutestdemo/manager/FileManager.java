@@ -30,11 +30,9 @@ import static com.mvcoder.edutestdemo.utils.Constants.RXCODE_UPLOAD_FILE;
 
 public class FileManager {
 
-   public void downloadFile(String downloadUrl, String savePath, int recordId) {
-        if (TextUtils.isEmpty(downloadUrl)) throw new IllegalArgumentException("downloadUrl不能为Null");
-        String filename = getFilename(downloadUrl);
-        if (filename == null) return;
-        Call<ResponseBody> call = Network.getInstance().fileApi().downloadFile(filename);
+   public void downloadFile(int roomId, String filename, String savePath, int recordId) {
+        if (TextUtils.isEmpty(filename)) throw new IllegalArgumentException("downloadUrl不能为Null");
+        Call<ResponseBody> call = Network.getInstance().fileApi().downloadFile(roomId,filename);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -53,14 +51,14 @@ public class FileManager {
         });
     }
 
-   public  void uploadFile(String filepath, int recordId) {
+   public  void uploadFile(int roomId, String filepath, int recordId) {
         if (TextUtils.isEmpty(filepath)) return;
         File file = new File(filepath);
         if (!file.exists()) throw new IllegalArgumentException("文件不存在或者读取文件权限不足");
         String filename = getFilename(filepath);
-        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", filename,
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("inputFile", filename,
                 RequestBody.create(MediaType.parse("multipart/form-data"), file));
-        Network.getInstance().fileApi().uploadFile(filePart).subscribeOn(Schedulers.io())
+        Network.getInstance().fileApi().uploadFile(roomId,filePart).subscribeOn(Schedulers.io())
                 .subscribe((new BaseSubscriber<MResponse>() {
                     @Override
                     public void onSuccess(MResponse mResponse) {

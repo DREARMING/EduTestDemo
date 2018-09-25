@@ -6,6 +6,7 @@ package com.mvcoder.edutestdemo.beans;
 public class SchoolClass {
     private int classId;
     private String className;
+    private int stuNum;
     private Grade grade;
 
 }

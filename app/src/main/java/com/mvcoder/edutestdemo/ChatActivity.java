@@ -86,10 +86,13 @@ public class ChatActivity extends AppCompatActivity {
 
     private boolean isConnected = false;
     private boolean hasSendID = false;
+    private int chatRoomId = 1;
 
     private static final String CHAT_SERVER_URL = "http://192.168.1.67:3001/";
 
+    private static final String SEND_TXT_MSG = "send_txt_msg";
     private static final String TXT_MSG = "new_txt_msg";
+    private static final String SEND_FILE_MSG = "send_file_msg";
     private static final String FILE_MSG = "new_file_msg";
     private static final String SEND_USERID_MSG = "send_userid_msg";
     private static final String RECEIVE_USERID_MSG = "receive_userid_msg";
@@ -124,7 +127,15 @@ public class ChatActivity extends AppCompatActivity {
                     receiveFileMsg(fileMsg);
                     break;
                 case MSG_USERID_RECEIVE:
-                    hasSendID = true;
+                    String info = (String) msg.obj;
+                    String id = mSenderId+"";
+                    if(id.equals(info)){
+                        hasSendID = true;
+                        ToastUtils.showShort("收到userId返回信息");
+                    }else{
+                        ToastUtils.showShort("服务端接收userId失败");
+                    }
+
                     break;
             }
         }
@@ -177,6 +188,7 @@ public class ChatActivity extends AppCompatActivity {
         if (mDir != null) mDir.mkdirs();
         try {
             mSocket = IO.socket(CHAT_SERVER_URL);
+            mSocket = mSocket.io().socket("/room_" + chatRoomId);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -216,7 +228,14 @@ public class ChatActivity extends AppCompatActivity {
     private Emitter.Listener onReceiveUserID = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            mHandler.sendEmptyMessage(MSG_USERID_RECEIVE);
+            android.os.Message msg = android.os.Message.obtain();
+            msg.what = MSG_USERID_RECEIVE;
+            if(args == null || args[0] instanceof Integer){
+                msg.obj = args[0] + "";
+            }else{
+                msg.obj = args[0];
+            }
+            mHandler.sendMessage(msg);
         }
     };
 
@@ -260,7 +279,7 @@ public class ChatActivity extends AppCompatActivity {
                 return;
             }
             android.os.Message message = android.os.Message.obtain();
-            message.what = MSG_TXT_RECEIVE;
+            message.what = MSG_FILE_RECEIVE;
             message.obj = fileMsg;
             mHandler.sendMessage(message);
         }
@@ -333,7 +352,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 FileMsg msg = new FileMsg();
                 msg.setSenderId(mSenderId);
-                msg.setChatRoomId(1);
+                msg.setChatRoomId(chatRoomId);
                 msg.setSendTime(System.currentTimeMillis());
                 msg.setState(0);
                 msg.setPlayPath(filePath);
@@ -342,9 +361,6 @@ public class ChatActivity extends AppCompatActivity {
                 msg.setFileType("audio");
                 msg.setShow(true);
 
-                if(!mSocket.connected() && hasSendID) {
-                    mSocket.emit(FILE_MSG, GsonUtil.getInstance().defaultGson().toJson(msg));
-                }
 
                 addMsg(msg);
             }
@@ -404,12 +420,12 @@ public class ChatActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(text)) return;
         TextMessage msg = new TextMessage();
         msg.setSenderId(mSenderId);
-        msg.setChatRoomId(1);
+        msg.setChatRoomId(chatRoomId);
         msg.setContent(text);
         msg.setSendTime(System.currentTimeMillis());
 
         if(mSocket.connected() && hasSendID)
-            mSocket.emit(TXT_MSG, GsonUtil.getInstance().defaultGson().toJson(msg));
+            mSocket.emit(SEND_TXT_MSG, GsonUtil.getInstance().defaultGson().toJson(msg));
 
         etContent.setText("");
         addMsg(msg);
@@ -465,13 +481,13 @@ public class ChatActivity extends AppCompatActivity {
                     fileMsg.setState(1);
                     if (fileMsg.getSenderId() == mSenderId) {
                         LogUtil.d("上传文件");
-                        fileManager.uploadFile(fileMsg.getPlayPath(), position);
+                        fileManager.uploadFile(chatRoomId, fileMsg.getPlayPath(), position);
                         holder.setText(R.id.id_recorder_time, "上传语音文件中..");
                     } else {
                         LogUtil.d("下载文件");
-                        File file = new File(mDir, fileManager.getFilename(fileMsg.getDownloadUrl()));
+                        File file = new File(mDir, fileMsg.getFilename());
                         fileMsg.setPlayPath(file.getAbsolutePath());
-                        fileManager.downloadFile(fileMsg.getDownloadUrl(), fileMsg.getPlayPath(), position);
+                        fileManager.downloadFile(chatRoomId, fileMsg.getFilename(), fileMsg.getPlayPath(), position);
                         holder.setText(R.id.id_recorder_time, "下载语音文件中..");
                     }
                 } else if (fileMsg.getState() == 2) {
@@ -519,6 +535,9 @@ public class ChatActivity extends AppCompatActivity {
             FileMsg fileMsg = (FileMsg) msg;
             if(fileInfo.isSuccess()) {
                 fileMsg.setState(2);
+                if(mSocket.connected() && hasSendID) {
+                    mSocket.emit(SEND_FILE_MSG, GsonUtil.getInstance().defaultGson().toJson(fileMsg));
+                }
             }else{
                 fileMsg.setState(3);
             }

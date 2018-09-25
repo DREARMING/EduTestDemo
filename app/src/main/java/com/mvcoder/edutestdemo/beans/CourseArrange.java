@@ -27,7 +27,7 @@ public class CourseArrange {
     transient Room room;
     transient Course course;
 
-
+    /*个人选修和通识课的查表问题，尚未解决*/
 
     /*enum DAYS{
 

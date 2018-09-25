@@ -15,10 +15,10 @@ import retrofit2.http.Path;
 public interface FileApi {
 
     @Multipart
-    @POST("/upload/chatroom")
-    Observable<MResponse> uploadFile(@Part MultipartBody.Part file);
+    @POST("/upload/room_{roomId}")
+    Observable<MResponse> uploadFile(@Path("roomId") int roomId, @Part MultipartBody.Part file);
 
-    @GET("/download/chatroom/{filename}")
-    Call<ResponseBody> downloadFile(@Path("filename") String filename);
+    @GET("/download/room_{roomId}/{filename}")
+    Call<ResponseBody> downloadFile(@Path("roomId") int roomId,@Path("filename") String filename);
 
 }

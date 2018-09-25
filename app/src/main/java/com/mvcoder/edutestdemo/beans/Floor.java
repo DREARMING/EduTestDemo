@@ -10,5 +10,4 @@ public class Floor {
 
     //楼层的教室列表
     private List<Room> roomList;
-    private String extra;
 }

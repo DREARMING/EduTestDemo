@@ -14,6 +14,7 @@ public class User {
 
     private int type;//用户类型（0未设置，1学生，2教师）
     private String number;//学号、职工号
+    private String classRoomId; //班级
 
     private String post;//职位
     private String jobTitle; //职称

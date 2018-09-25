@@ -15,6 +15,4 @@ public class Grade {
     //班级信息
     private List<SchoolClass> classList;
 
-
-
 }
