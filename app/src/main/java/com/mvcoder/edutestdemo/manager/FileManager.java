@@ -41,6 +41,8 @@ public class FileManager {
                     if(flag) {
                         RxBus.getDefault().post(Constants.RXCODE_DOWNLOAD_FILE,new FileInfo(recordId, true));
                     }
+                }else{
+                    RxBus.getDefault().post(RXCODE_DOWNLOAD_FILE, new FileInfo(recordId,false));
                 }
             }
 
