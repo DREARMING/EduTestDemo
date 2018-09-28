@@ -67,7 +67,7 @@ public class GsonUtil {
      * @param fields
      * @return
      */
-    public Gson fieldsGson(final boolean isExclusive, final String... fields){
+    public Gson fieldsGson(boolean isPrettyPrint, final boolean isExclusive, final String... fields){
         GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss");
         builder.setExclusionStrategies(new ExclusionStrategy() {
             @Override
@@ -86,6 +86,8 @@ public class GsonUtil {
                 return false;
             }
         });
+        if(isPrettyPrint)
+            builder.setPrettyPrinting();
         return builder.create();
     }
 

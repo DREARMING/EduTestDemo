@@ -18,4 +18,51 @@ public class LessionTimeInfo {
     private Date endTime;
     private TimeTable timeTable;
 
+    public int getLessionId() {
+        return lessionId;
+    }
+
+    public void setLessionId(int lessionId) {
+        this.lessionId = lessionId;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public String getLessionName() {
+        return lessionName;
+    }
+
+    public void setLessionName(String lessionName) {
+        this.lessionName = lessionName;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public TimeTable getTimeTable() {
+        return timeTable;
+    }
+
+    public void setTimeTable(TimeTable timeTable) {
+        this.timeTable = timeTable;
+    }
 }

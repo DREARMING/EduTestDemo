@@ -8,6 +8,8 @@ public class CourseArrange {
     private int arrageId;
     //课节信息id
     private int lessionInfoId;
+    //学期id
+    private int termId;
     //周几
     private int day;
     //课室id
@@ -29,22 +31,107 @@ public class CourseArrange {
 
     /*个人选修和通识课的查表问题，尚未解决*/
 
-    /*enum DAYS{
+    public int getArrageId() {
+        return arrageId;
+    }
 
-        MONDAY(0, "周一"),THUESDAY(1, "周二"),WEDSDAY(2, "周三");
+    public void setArrageId(int arrageId) {
+        this.arrageId = arrageId;
+    }
 
-        private String day;
-        private int index;
+    public int getLessionInfoId() {
+        return lessionInfoId;
+    }
 
-        @Override
-        public String toString() {
-            return day;
-        }
+    public void setLessionInfoId(int lessionInfoId) {
+        this.lessionInfoId = lessionInfoId;
+    }
 
-        DAYS(int index, String name){
-            this.day = name;
-            this.index = index;
-        }
-    }*/
+    public int getDay() {
+        return day;
+    }
 
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public int getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
+    }
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
+
+    public int getStartWeek() {
+        return startWeek;
+    }
+
+    public void setStartWeek(int startWeek) {
+        this.startWeek = startWeek;
+    }
+
+    public int getEndWeek() {
+        return endWeek;
+    }
+
+    public void setEndWeek(int endWeek) {
+        this.endWeek = endWeek;
+    }
+
+    public int getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(int teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public int getSchoolClassId() {
+        return schoolClassId;
+    }
+
+    public void setSchoolClassId(int schoolClassId) {
+        this.schoolClassId = schoolClassId;
+    }
+
+    public LessionTimeInfo getLessionTimeInfo() {
+        return lessionTimeInfo;
+    }
+
+    public void setLessionTimeInfo(LessionTimeInfo lessionTimeInfo) {
+        this.lessionTimeInfo = lessionTimeInfo;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public int getTermId() {
+        return termId;
+    }
+
+    public void setTermId(int termId) {
+        this.termId = termId;
+    }
 }

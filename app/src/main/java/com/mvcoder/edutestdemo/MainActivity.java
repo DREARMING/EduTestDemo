@@ -13,12 +13,12 @@ import com.mvcoder.edutestdemo.bean.BaseSubscriber;
 import com.mvcoder.edutestdemo.beans.ClassBuilding;
 import com.mvcoder.edutestdemo.beans.Floor;
 import com.mvcoder.edutestdemo.beans.Room;
-import com.mvcoder.edutestdemo.greendao.DaoSession;
-import com.mvcoder.edutestdemo.utils.DBUtils;
 import com.mvcoder.edutestdemo.utils.ExceptionHandle;
 import com.mvcoder.edutestdemo.utils.LogUtil;
 import com.mvcoder.edutestdemo.utils.MResponse;
 import com.mvcoder.edutestdemo.utils.Network;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 joinToLiveActivity();
                 break;
             case R.id.bt_db:
-                testDB();
+                testDB2();
                 break;
         }
     }
@@ -189,11 +189,22 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 });
     }
 
+    private void testDB2() {
+        ClassBuilding building = LitePal.find(ClassBuilding.class, 1, true);
+        List<Floor>floorList = building.getFloorList();
+
+        Floor floor = LitePal.findFirst(Floor.class, true);
+        List<Room> roomList = floor.getRoomList();
+        System.out.println(building.getBuildingName());
+
+
+        building.setBuildingId(2);
+        boolean flag = building.saveOrUpdate("buildingId=?","1");
+        System.out.println(flag);
+    }
+
 
     private void testDB() {
-
-        DaoSession daoSession = DBUtils.getInstance().getDaoSession();
-
         ClassBuilding building = new ClassBuilding();
         building.setBuildingId(1);
         building.setBuildingName("一教");
@@ -201,47 +212,45 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
         List<Floor> floorList = new ArrayList<>();
         Floor floor1 = new Floor();
-        floor1.setBuildingId(building.getBuildingId());
         floor1.setFloorId(1);
         floor1.setFloorName("一楼");
-
+       // floor1.setBuilding(building);
         List<Room> roomList = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             Room room = new Room();
             room.setRoomId(i + 1);
             room.setRoomName(floor1.getFloorId() + "0" + room.getRoomId());
-            room.setFloorId(floor1.getFloorId());
             room.setType(0);
-            daoSession.getRoomDao().insertOrReplace(room);
+            //room.setFloor(floor1);
             roomList.add(room);
         }
+        LitePal.saveAll(roomList);
         floor1.setRoomList(roomList);
-        daoSession.getFloorDao().insertOrReplace(floor1);
         floorList.add(floor1);
+        floor1.saveOrUpdate("floorId=?", floor1.getFloorId()+"");
 
         Floor floor2 = new Floor();
-        floor2.setBuildingId(building.getBuildingId());
         floor2.setFloorId(2);
         floor2.setFloorName("二楼");
-
+        //floor2.setBuilding(building);
         List<Room> roomList2 = new ArrayList<>();
         for (int i = 4; i < 8; i++) {
             Room room = new Room();
-            room.setRoomId(i + 1);
+            room.setRoomId(i + 1 - 4);
             room.setRoomName(floor2.getFloorId() + "0" + room.getRoomId());
-            room.setFloorId(floor2.getFloorId());
             room.setType(0);
-            daoSession.getRoomDao().insertOrReplace(room);
+            //room.setFloor(floor2);
             roomList2.add(room);
         }
-        daoSession.getFloorDao().insertOrReplace(floor2);
+        LitePal.saveAll(roomList2);
         floor2.setRoomList(roomList2);
         floorList.add(floor2);
+        floor2.saveOrUpdate("floorId=?", floor2.getFloorId()+"");
 
-        daoSession.getClassBuildingDao().insertOrReplace(building);
+        building.setFloorList(floorList);
 
-        LogUtil.d("size : " + (building.getFloorList() != null));
-
+       boolean flag = building.saveOrUpdate("buildingId=?", building.getBuildingId() + "");
+       LogUtil.d("flag : " + flag);
     }
 
 }

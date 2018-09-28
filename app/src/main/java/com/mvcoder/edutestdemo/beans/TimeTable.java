@@ -1,6 +1,5 @@
 package com.mvcoder.edutestdemo.beans;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,17 +9,44 @@ public class TimeTable {
 
     private int timeTableId;
     private String tableName;
-    //学期id
-    private int termId;
-    private String termName;
-    //指每日课节数
+
     private int lessionNums;
-    //一学期多少周
-    private int weekNums;
-    //学期开始时间
-    private Date startDate;
-    private Date endDate;
+
 
     //每一节课的时间安排
     private List<LessionTimeInfo> lessionTimeList;
+
+    public int getTimeTableId() {
+        return timeTableId;
+    }
+
+    public void setTimeTableId(int timeTableId) {
+        this.timeTableId = timeTableId;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+
+    public int getLessionNums() {
+        return lessionNums;
+    }
+
+    public void setLessionNums(int lessionNums) {
+        this.lessionNums = lessionNums;
+    }
+
+
+    public List<LessionTimeInfo> getLessionTimeList() {
+        return lessionTimeList;
+    }
+
+    public void setLessionTimeList(List<LessionTimeInfo> lessionTimeList) {
+        this.lessionTimeList = lessionTimeList;
+    }
 }
