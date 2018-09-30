@@ -1,52 +1,171 @@
 package com.mvcoder.edutestdemo.beans;
 
-import org.litepal.crud.LitePalSupport;
+import com.mvcoder.edutestdemo.greendao.ClassBuildingDao;
+import com.mvcoder.edutestdemo.greendao.DaoSession;
+import com.mvcoder.edutestdemo.greendao.FloorDao;
+
+import org.greenrobot.greendao.DaoException;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Index;
+import org.greenrobot.greendao.annotation.ToMany;
+import org.greenrobot.greendao.annotation.Transient;
 
 import java.util.List;
 
 /**
  * 教学楼
  */
-public class ClassBuilding extends LitePalSupport{
+@Entity
+public class ClassBuilding/* extends LitePalSupport*/{
 
     //学校id、分校
     private int scroolId;
 
-    private int buildingId;
+    @Id
+    private long buildingId;
 
     private String buildingName;
 
+    /*@ToMany(joinProperties = {
+            @JoinProperty(name = "buildingId", referencedName = "classBuildingId")
+    })*/
+    @ToMany(referencedJoinProperty = "buildingId")
     private List<Floor> floorList;
 
+    @Index
+    private long lastModified;
+
+    @Transient
+    private int state;
+
+    /** Used to resolve relations */
+    @Generated(hash = 2040040024)
+    private transient DaoSession daoSession;
+
+    /** Used for active entity operations. */
+    @Generated(hash = 885001485)
+    private transient ClassBuildingDao myDao;
+
+    @Generated(hash = 1681027264)
+    public ClassBuilding(int scroolId, long buildingId, String buildingName, long lastModified) {
+        this.scroolId = scroolId;
+        this.buildingId = buildingId;
+        this.buildingName = buildingName;
+        this.lastModified = lastModified;
+    }
+
+    @Generated(hash = 774320108)
+    public ClassBuilding() {
+    }
+
     public int getScroolId() {
-        return scroolId;
+        return this.scroolId;
     }
 
     public void setScroolId(int scroolId) {
         this.scroolId = scroolId;
     }
 
-    public int getBuildingId() {
-        return buildingId;
+    public long getBuildingId() {
+        return this.buildingId;
+    }
+
+    public void setBuildingId(long buildingId) {
+        this.buildingId = buildingId;
     }
 
     public String getBuildingName() {
-        return buildingName;
+        return this.buildingName;
     }
 
     public void setBuildingName(String buildingName) {
         this.buildingName = buildingName;
     }
 
+    /**
+     * To-many relationship, resolved on first access (and after reset).
+     * Changes to to-many relations are not persisted, make changes to the target entity.
+     */
+    @Generated(hash = 1893818673)
     public List<Floor> getFloorList() {
+        if (floorList == null) {
+            final DaoSession daoSession = this.daoSession;
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            FloorDao targetDao = daoSession.getFloorDao();
+            List<Floor> floorListNew = targetDao
+                    ._queryClassBuilding_FloorList(buildingId);
+            synchronized (this) {
+                if (floorList == null) {
+                    floorList = floorListNew;
+                }
+            }
+        }
         return floorList;
     }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    @Generated(hash = 2093495330)
+    public synchronized void resetFloorList() {
+        floorList = null;
+    }
+
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 128553479)
+    public void delete() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.delete(this);
+    }
+
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 1942392019)
+    public void refresh() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.refresh(this);
+    }
+
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 713229351)
+    public void update() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.update(this);
+    }
+
+    /** called by internal mechanisms, do not call yourself. */
+    @Generated(hash = 1033090167)
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getClassBuildingDao() : null;
+    }
+
 
     public void setFloorList(List<Floor> floorList) {
         this.floorList = floorList;
     }
 
-    public void setBuildingId(int buildingId) {
-        this.buildingId = buildingId;
+    public long getLastModified() {
+        return this.lastModified;
+    }
+
+    public void setLastModified(long lastModified) {
+        this.lastModified = lastModified;
     }
 }

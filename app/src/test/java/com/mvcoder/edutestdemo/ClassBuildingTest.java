@@ -5,6 +5,7 @@ import com.mvcoder.edutestdemo.beans.ClassBuilding;
 import com.mvcoder.edutestdemo.beans.Floor;
 import com.mvcoder.edutestdemo.beans.Room;
 import com.mvcoder.edutestdemo.utils.GsonUtil;
+import com.mvcoder.edutestdemo.utils.MResponse;
 
 import org.junit.Test;
 
@@ -18,8 +19,24 @@ public class ClassBuildingTest {
         Gson gson = GsonUtil.getInstance().fieldsGson(true,true,"baseObjId");
         //ClassBuilding building = getClassBuilding();
         List<ClassBuilding> building = getClassBuildings();
-        String result = gson.toJson(building);
-        System.out.println(result);
+        //String result = gson.toJson(building);
+       // System.out.println(result);
+
+        List<Room> clsRoomList = new ArrayList<>();
+        List<Floor> floorList = new ArrayList<>();
+
+        ClassBuilding building1 = building.get(1);
+        floorList = building1.getFloorList();
+        //clsRoomList = floorList.get(0).getRoomList();
+
+        MResponse<List<ClassBuilding>> mResponse = new MResponse<>();
+        mResponse.setCode(200);
+        building.get(0).setFloorList(null);
+        building.get(1).setFloorList(null);
+        mResponse.setData(building);
+
+        String roomResult = gson.toJson(mResponse);
+        System.out.println(roomResult);
     }
 
 
@@ -84,6 +101,7 @@ public class ClassBuildingTest {
             List<Floor> floorList = new ArrayList<>();
             for(int j=0; j < floorNum; j++){
                 Floor floor1 = new Floor();
+                floor1.setBuildingId(building.getBuildingId());
                 floor1.setFloorId(i * floorNum + j + 1);
                 floor1.setFloorName((j + 1) + "楼");
                 // floor1.setBuilding(building);
@@ -91,11 +109,14 @@ public class ClassBuildingTest {
                 for(int k = 0; k < roomNum; k++){
                     Room room = new Room();
                     room.setRoomId(roomID++);
-                    int roomNumber = room.getRoomId() % roomNum;
-                    int floorNumber = floor1.getFloorId() % floorNum;
+                    room.setFloorId(floor1.getFloorId());
+                    int roomNumber = (int) (room.getRoomId() % roomNum);
+                    int floorNumber = (int) (floor1.getFloorId() % floorNum);
                     room.setRoomName((floorNumber % floorNum == 0?floorNum:floorNumber) + "0" + (roomNumber == 0? roomNum:roomNumber));
                     room.setType(0);
                     room.setCapacity(30);
+                    room.setLastModified(System.currentTimeMillis());
+                    room.setState(0);
                     roomList.add(room);
                 }
                // LitePal.saveAll(roomList);

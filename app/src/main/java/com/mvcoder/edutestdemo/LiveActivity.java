@@ -22,7 +22,7 @@ public class LiveActivity extends AppCompatActivity {
     @BindView(R.id.bt_play)
     Button btPlay;
 
-    private String URL = "rtmp://live.hkstv.hk.lxdns.com/live/hks";
+    private String URL = "rtmp://192.168.1.67/live/test";
     @BindView(R.id.et_url)
     EditText etUrl;
 

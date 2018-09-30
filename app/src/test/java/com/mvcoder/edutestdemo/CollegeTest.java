@@ -21,7 +21,7 @@ public class CollegeTest {
         Gson gson = GsonUtil.getInstance().fieldsGson(true,true,"baseObjId");
         List<College> collegeList = getCollege();
         String result = gson.toJson(collegeList);
-        System.out.println(result);
+       System.out.println(result);
     }
 
     private String[] deparmentNames = new String[]{
@@ -46,6 +46,22 @@ public class CollegeTest {
     };
 
 
+    private List<Grade> getGradeList(){
+        int gradeNum = 4;
+        int gradeIdStep = 1;
+
+        List<Grade> gradeList = new ArrayList<>();
+        for(int n = 0; n < gradeNum; n++){
+            Grade grade = new Grade();
+            grade.setGradeId(gradeIdStep++);
+            int gradeIndex = (int) ((grade.getGradeId() - 1) % 4);
+            grade.setGradeName(gradeNames[gradeIndex]);
+            grade.setEnrolDate(dates[gradeIndex]);
+            gradeList.add(grade);
+        }
+        return gradeList;
+    }
+
    // private String[] majorNames = new String[]{};
 
     private List<College> getCollege(){
@@ -59,6 +75,7 @@ public class CollegeTest {
         int majorIdStep = 1;
         int gradeIdStep = 1;
         int classIdStep = 1;
+        List<Grade> gradeList = getGradeList();
         List<College> collegeList  = new ArrayList<>();
         for(int i = 0; i < collegeNum; i++){
             College college = new College();
@@ -68,35 +85,35 @@ public class CollegeTest {
             for(int j=0;j<deparmentNum;j++){
                 Department department = new Department();
                 int deparmentId = i * deparmentNum + j + 1;
+                department.setCollegeId(college.getCollegeId());
                 department.setDepartmentId(deparmentId);
                 department.setDepartmentName(deparmentNames[deparmentId - 1]);
                 List<Major> majorList = new ArrayList<>();
                 for(int k = 0; k < marjorNum; k++){
                     Major major = new Major();
                     major.setMajorId(majorIdStep++);
-                    major.setMajorName(majorNames[major.getMajorId() - 1]);
+                    major.setMajorName(majorNames[(int) (major.getMajorId() - 1)]);
+                    major.setDepartmentId(department.getDepartmentId());
                     major.setStudyYears(4);
-                    List<Grade> gradeList = new ArrayList<>();
-                    for(int n = 0; n < gradeNum; n++){
-                        Grade grade = new Grade();
-                        grade.setGradeId(gradeIdStep++);
-                        int gradeIndex = (grade.getGradeId() - 1) % 4;
-                        grade.setGradeName(gradeNames[gradeIndex]);
-                        grade.setEnrolDate(dates[gradeIndex]);
+                    List<SchoolClass> majorClassList = new ArrayList<>();
+                    for(int n = 0; n < gradeList.size(); n++){
+                        Grade grade = gradeList.get(n);
                         List<SchoolClass> classList = new ArrayList<>();
                         for(int s = 0; s < classNum; s++){
                             SchoolClass schoolClass = new SchoolClass();
                             schoolClass.setClassId(classIdStep++);
-                            int classNumber = schoolClass.getClassId() % classNum;
+                            schoolClass.setGradeId(grade.getGradeId());
+                            schoolClass.setMajorId(major.getMajorId());
+                            int classNumber = (int) (schoolClass.getClassId() % classNum);
                             String className = grade.getGradeName() + major.getMajorName() +(classNumber == 0?classNum:classNumber) + "班";
                             schoolClass.setClassName(className);
                             schoolClass.setStuNum(30);
                             classList.add(schoolClass);
                         }
                         grade.setClassList(classList);
-                        gradeList.add(grade);
+                        majorClassList.addAll(classList);
                     }
-                    major.setGradeList(gradeList);
+                    major.setSchoolClassList(majorClassList);
                     majorList.add(major);
                 }
                 department.setMajorList(majorList);

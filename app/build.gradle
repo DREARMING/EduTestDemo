@@ -30,7 +30,7 @@ android {
 
 
 greendao {
-    schemaVersion 1 // 数据库版本号
+    schemaVersion 3 // 数据库版本号
     daoPackage 'com.mvcoder.edutestdemo.greendao' //自动生成的代码保存的包名
     targetGenDir 'src/main/java' //自动生成的代码存储的路径，默认是 build/generated/source/greendao.
     generateTests false //true的时候自动生成测试单元
@@ -65,5 +65,6 @@ dependencies {
     implementation 'org.litepal.android:core:2.0.0'
 
     implementation 'org.greenrobot:greendao:3.2.2' // add library
+    implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.1.0'
 
 }

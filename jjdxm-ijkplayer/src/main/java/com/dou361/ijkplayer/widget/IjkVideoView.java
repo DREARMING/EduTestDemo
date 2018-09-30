@@ -455,10 +455,10 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
                     if (usingRTMPMode) {
                         //秒开设置
-                        ijkMediaPlayer.setOption(1, "analyzemaxduration", 100L);
+                        ijkMediaPlayer.setOption(1, "analyzemaxduration", 100000L);
                         ijkMediaPlayer.setOption(1, "probesize", 10240L);
                         ijkMediaPlayer.setOption(1, "flush_packets", 1L);
-                        ijkMediaPlayer.setOption(4, "packet-buffering", 0L);
+                        ijkMediaPlayer.setOption(4, "packet-buffering", 1024L);
                     }
 
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);

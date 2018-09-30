@@ -70,6 +70,7 @@ public class TimeTableTest {
             LessionTimeInfo info = new LessionTimeInfo();
             info.setIndex(i);
             info.setLessionId(i+1);
+            info.setTimeTableId(timeTable.getTimeTableId());
             info.setLessionName("第" + (i+1) + "节");
             String[] lessTimes = lessionTimes[i].split("-");
             Date startTime = convertToDate(lessTimes[0]);

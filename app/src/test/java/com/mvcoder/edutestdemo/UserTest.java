@@ -3,6 +3,7 @@ package com.mvcoder.edutestdemo;
 import com.google.gson.Gson;
 import com.mvcoder.edutestdemo.beans.User;
 import com.mvcoder.edutestdemo.utils.GsonUtil;
+import com.mvcoder.edutestdemo.utils.MResponse;
 
 import org.junit.Test;
 
@@ -15,7 +16,10 @@ public class UserTest {
     public void testUser(){
         Gson gson = GsonUtil.getInstance()
                 .fieldsGson(true,true,"baseObjId");
-        String result = gson.toJson(getUserList());
+        MResponse<User> mResponse = new MResponse<>();
+        mResponse.setCode(200);
+        mResponse.setData(getUser());
+        String result = gson.toJson(mResponse);
         System.out.println(result);
     }
 

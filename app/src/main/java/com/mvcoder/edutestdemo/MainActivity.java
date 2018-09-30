@@ -13,12 +13,15 @@ import com.mvcoder.edutestdemo.bean.BaseSubscriber;
 import com.mvcoder.edutestdemo.beans.ClassBuilding;
 import com.mvcoder.edutestdemo.beans.Floor;
 import com.mvcoder.edutestdemo.beans.Room;
+import com.mvcoder.edutestdemo.greendao.ClassBuildingDao;
+import com.mvcoder.edutestdemo.greendao.DaoSession;
+import com.mvcoder.edutestdemo.greendao.FloorDao;
+import com.mvcoder.edutestdemo.greendao.RoomDao;
+import com.mvcoder.edutestdemo.utils.DBUtil;
 import com.mvcoder.edutestdemo.utils.ExceptionHandle;
 import com.mvcoder.edutestdemo.utils.LogUtil;
 import com.mvcoder.edutestdemo.utils.MResponse;
 import com.mvcoder.edutestdemo.utils.Network;
-
-import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 joinToLiveActivity();
                 break;
             case R.id.bt_db:
-                testDB2();
+                testDB();
                 break;
         }
     }
@@ -189,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 });
     }
 
-    private void testDB2() {
+    /*private void testDB2() {
         ClassBuilding building = LitePal.find(ClassBuilding.class, 1, true);
         List<Floor>floorList = building.getFloorList();
 
@@ -199,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
 
         building.setBuildingId(2);
-        boolean flag = building.saveOrUpdate("buildingId=?","1");
+       // boolean flag = building.saveOrUpdate("buildingId=?","1");
         System.out.println(flag);
     }
 
@@ -251,6 +254,74 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
        boolean flag = building.saveOrUpdate("buildingId=?", building.getBuildingId() + "");
        LogUtil.d("flag : " + flag);
+    }*/
+
+    private void testDB() {
+        ClassBuilding building = new ClassBuilding();
+        building.setBuildingId(1);
+        building.setBuildingName("一教");
+        building.setScroolId(1);
+
+        List<Floor> floorList = new ArrayList<>();
+        Floor floor1 = new Floor();
+        floor1.setFloorId(1);
+        floor1.setFloorName("一楼");
+        floor1.setBuildingId(building.getBuildingId());
+        List<Room> roomList = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            Room room = new Room();
+            room.setRoomId(i + 1);
+            room.setRoomName(floor1.getFloorId() + "0" + room.getRoomId());
+            room.setType(0);
+            room.setFloorId(floor1.getFloorId());
+            roomList.add(room);
+        }
+        floorList.add(floor1);
+
+        Floor floor2 = new Floor();
+        floor2.setFloorId(2);
+        floor2.setFloorName("二楼");
+        floor2.setBuildingId(building.getBuildingId());
+        List<Room> roomList2 = new ArrayList<>();
+        for (int i = 4; i < 8; i++) {
+            Room room = new Room();
+            room.setRoomId(i + 1);
+            room.setRoomName(floor2.getFloorId() + "0" + room.getRoomId());
+            room.setType(0);
+            room.setFloorId(floor2.getFloorId());
+            roomList2.add(room);
+        }
+        floorList.add(floor2);
+
+        DaoSession session = DBUtil.getInstance().getDaoSession();
+        RoomDao roomDao = session.getRoomDao();
+        roomDao.insertOrReplaceInTx(roomList);
+        roomDao.insertOrReplaceInTx(roomList2);
+
+        FloorDao floorDao = session.getFloorDao();
+        floorDao.insertOrReplace(floor1);
+        floorDao.insertOrReplace(floor2);
+
+        ClassBuildingDao classBuildingDao = session.getClassBuildingDao();
+        classBuildingDao.insertOrReplace(building);
+
+
+        ClassBuilding queryBuilding = classBuildingDao.queryBuilder()
+                .where(ClassBuildingDao.Properties.BuildingId.eq(building.getBuildingId()))
+                .unique();
+        LogUtil.d("building name : " + queryBuilding.getBuildingName());
+
+        List<Floor> floorList1 = queryBuilding.getFloorList();
+        LogUtil.d("floor size:" + floorList1.size());
+
+        List<Room> roomList1 = floorList.get(0).getRoomList();
+        LogUtil.d("roomList size : " + roomList1.size());
+
+        ClassBuilding floorBuilding = floorList1.get(0).getBuilding();
+        LogUtil.d("building name:" + floorBuilding.getBuildingName());
+
+
+
     }
 
 }

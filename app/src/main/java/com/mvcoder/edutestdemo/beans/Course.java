@@ -1,9 +1,18 @@
 package com.mvcoder.edutestdemo.beans;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Index;
+import org.greenrobot.greendao.annotation.Keep;
+import org.greenrobot.greendao.annotation.Transient;
+
+@Entity
 public class Course {
 
     //学科d
-    private int courseId;
+    @Id
+    private long courseId;
     private String courseName;
     //科目类型：将来有可能存在公共必修，选修
     private int type;
@@ -14,59 +23,83 @@ public class Course {
     private int level;
     private String levelName;
 
-    public int getCourseId() {
-        return courseId;
-    }
+    @Index
+    private long lastModified;
 
-    public void setCourseId(int courseId) {
+    @Transient
+    private int state;
+
+    @Generated(hash = 503028059)
+    public Course(long courseId, String courseName, int type, String typeName,
+            int hours, int level, String levelName, long lastModified) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.type = type;
+        this.typeName = typeName;
+        this.hours = hours;
+        this.level = level;
+        this.levelName = levelName;
+        this.lastModified = lastModified;
+    }
+    @Generated(hash = 1355838961)
+    public Course() {
+    }
+    public long getCourseId() {
+        return this.courseId;
+    }
+    public void setCourseId(long courseId) {
         this.courseId = courseId;
     }
-
     public String getCourseName() {
-        return courseName;
+        return this.courseName;
     }
-
     public void setCourseName(String courseName) {
         this.courseName = courseName;
     }
-
     public int getType() {
-        return type;
+        return this.type;
     }
-
     public void setType(int type) {
         this.type = type;
     }
-
     public String getTypeName() {
-        return typeName;
+        return this.typeName;
     }
-
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
-
     public int getHours() {
-        return hours;
+        return this.hours;
     }
-
     public void setHours(int hours) {
         this.hours = hours;
     }
-
     public int getLevel() {
-        return level;
+        return this.level;
     }
-
     public void setLevel(int level) {
         this.level = level;
     }
-
     public String getLevelName() {
-        return levelName;
+        return this.levelName;
     }
-
     public void setLevelName(String levelName) {
         this.levelName = levelName;
+    }
+    public long getLastModified() {
+        return this.lastModified;
+    }
+    public void setLastModified(long lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    @Keep
+    public int getState() {
+        return state;
+    }
+
+    @Keep
+    public void setState(int state) {
+        this.state = state;
     }
 }
