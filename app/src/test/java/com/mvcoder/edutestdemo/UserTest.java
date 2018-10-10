@@ -16,9 +16,9 @@ public class UserTest {
     public void testUser(){
         Gson gson = GsonUtil.getInstance()
                 .fieldsGson(true,true,"baseObjId");
-        MResponse<User> mResponse = new MResponse<>();
+        MResponse<List<User>> mResponse = new MResponse<>();
         mResponse.setCode(200);
-        mResponse.setData(getUser());
+        mResponse.setData(getUserList());
         String result = gson.toJson(mResponse);
         System.out.println(result);
     }

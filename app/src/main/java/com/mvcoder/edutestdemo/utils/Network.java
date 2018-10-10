@@ -97,7 +97,7 @@ public class Network implements RxActionManager<String> {
                 .connectTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
-                //.addInterceptor(new HttpInfoInterceptor())
+                //.addInterceptor(new TokenInterceptor())
                 //网络请求和响应 日志打印
                 //.addInterceptor(new HttpLoggingInterceptor(new HttpLogger()))
                 //.addInterceptor(new TokenInterceptor())

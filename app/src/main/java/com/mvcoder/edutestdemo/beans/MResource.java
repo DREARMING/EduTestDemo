@@ -11,9 +11,14 @@ public class MResource {
     private int type; //资源类型，文档还是视频
     private String resUrl; //文档是下载url，视频是播放地址
 
+    private String thumbUrl;   //资源图片，文档是word、excel这些icon、直播视频是帧画面
+
     private String resName;
     private String resAbstract;
+    private long publishId;
     private String publishName;
+
+    private int courseId;   //学科id
 
     private int readNums;
     private int starNums;
@@ -109,5 +114,29 @@ public class MResource {
 
     public void setStar(boolean star) {
         isStar = star;
+    }
+
+    public String getThumbUrl() {
+        return thumbUrl;
+    }
+
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
+    }
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
+
+    public long getPublishId() {
+        return publishId;
+    }
+
+    public void setPublishId(long publishId) {
+        this.publishId = publishId;
     }
 }

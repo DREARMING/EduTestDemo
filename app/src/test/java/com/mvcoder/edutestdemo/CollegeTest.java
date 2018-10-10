@@ -7,6 +7,7 @@ import com.mvcoder.edutestdemo.beans.Grade;
 import com.mvcoder.edutestdemo.beans.Major;
 import com.mvcoder.edutestdemo.beans.SchoolClass;
 import com.mvcoder.edutestdemo.utils.GsonUtil;
+import com.mvcoder.edutestdemo.utils.MResponse;
 
 import org.junit.Test;
 
@@ -22,6 +23,17 @@ public class CollegeTest {
         List<College> collegeList = getCollege();
         String result = gson.toJson(collegeList);
        System.out.println(result);
+    }
+
+    @Test
+    public void testGrade(){
+        Gson gson = GsonUtil.getInstance().fieldsGson(true,true,"baseObjId");
+        List<Grade> gradeList =  getGradeList();
+        MResponse<List<Grade>> response = new MResponse<>();
+        response.setCode(200);
+        response.setData(gradeList);
+        String result = gson.toJson(response);
+        System.out.println(result);
     }
 
     private String[] deparmentNames = new String[]{

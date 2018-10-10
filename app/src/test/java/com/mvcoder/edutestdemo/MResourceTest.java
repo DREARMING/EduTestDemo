@@ -3,6 +3,7 @@ package com.mvcoder.edutestdemo;
 import com.google.gson.Gson;
 import com.mvcoder.edutestdemo.beans.MResource;
 import com.mvcoder.edutestdemo.utils.GsonUtil;
+import com.mvcoder.edutestdemo.utils.MResponse;
 
 import org.junit.Test;
 
@@ -16,7 +17,10 @@ public class MResourceTest {
     public void getResource() {
         Gson gson = GsonUtil.getInstance()
                 .fieldsGson(true,true,"baseObjId");
-        String result = gson.toJson(getResourceList());
+        MResponse<List<MResource>> response = new MResponse<>();
+        response.setCode(200);
+        response.setData(getResourceList());
+        String result = gson.toJson(response);
         System.out.println(result);
     }
 
@@ -34,6 +38,7 @@ public class MResourceTest {
             resource.setPublishDate(Calendar.getInstance().getTime());
             resource.setResAbstract("视频资源简介............");
             resource.setPublishName("admin");
+            resource.setPublishId(1);
             resource.setResUrl("http://videourl");
             list.add(resource);
         }
@@ -50,6 +55,7 @@ public class MResourceTest {
             resource.setPublishDate(Calendar.getInstance().getTime());
             resource.setResAbstract("文档资源简介............");
             resource.setPublishName("admin");
+            resource.setPublishId(1);
             resource.setResUrl("http://documentdonwloadurl");
             list.add(resource);
         }

@@ -24,6 +24,7 @@ public class User {
 
     private int type;//用户类型（0未设置，1管理员，2教师）
 
+    @Index(unique = true)
     private String number;//学号、职工号
     private int classRoomId; //班级
 
@@ -35,17 +36,19 @@ public class User {
     private Date loginTime;
     private boolean isLogin;
 
+    private String token;
+
     @Index
     private long lastModified;
 
     @Transient
     private int state;
 
-    @Generated(hash = 1617877605)
+    @Generated(hash = 645616089)
     public User(long userId, String username, String password, String nickname,
             int sex, String avartar, String phone, String email, int type,
             String number, int classRoomId, String post, String jobTitle,
-            String remember_token, Date loginTime, boolean isLogin,
+            String remember_token, Date loginTime, boolean isLogin, String token,
             long lastModified) {
         this.userId = userId;
         this.username = username;
@@ -63,6 +66,7 @@ public class User {
         this.remember_token = remember_token;
         this.loginTime = loginTime;
         this.isLogin = isLogin;
+        this.token = token;
         this.lastModified = lastModified;
     }
     @Generated(hash = 586692638)
@@ -178,6 +182,12 @@ public class User {
     @Keep
     public void setState(int state) {
         this.state = state;
+    }
+    public String getToken() {
+        return this.token;
+    }
+    public void setToken(String token) {
+        this.token = token;
     }
 
 

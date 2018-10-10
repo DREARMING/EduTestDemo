@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mvcoder.edutestdemo.beans.LessionTimeInfo;
 import com.mvcoder.edutestdemo.beans.TimeTable;
+import com.mvcoder.edutestdemo.utils.MResponse;
 
 import org.junit.Test;
 
@@ -20,7 +21,10 @@ public class TimeTableTest {
     public void testTimeTable(){
         Gson gson = fieldsGson(true,true,"baseObjId");
         String  result = gson.toJson(getTimeTable());
-        System.out.println(result);
+        MResponse<TimeTable> mResponse = new MResponse<>();
+        mResponse.setCode(200);
+        mResponse.setData(getTimeTable());
+        System.out.println(gson.toJson(mResponse));
     }
 
     private Gson fieldsGson(boolean isPrettyPrint, final boolean isExclusive, final String... fields){

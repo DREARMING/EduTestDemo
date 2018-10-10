@@ -3,10 +3,13 @@ package com.mvcoder.edutestdemo;
 import com.google.gson.Gson;
 import com.mvcoder.edutestdemo.beans.TermTable;
 import com.mvcoder.edutestdemo.utils.GsonUtil;
+import com.mvcoder.edutestdemo.utils.MResponse;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class TermTest {
 
@@ -14,7 +17,12 @@ public class TermTest {
     public void testTerm(){
         Gson gson = GsonUtil.getInstance()
                 .fieldsGson(true,true,"baseObjId");
-        String result = gson.toJson(getTerm());
+        MResponse<List<TermTable>> response = new MResponse<>();
+        response.setCode(200);
+        List<TermTable> termTables = new ArrayList<>();
+        termTables.add(getTerm());
+        response.setData(termTables);
+        String result = gson.toJson(response);
         System.out.println(result);
     }
 

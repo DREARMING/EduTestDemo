@@ -13,18 +13,18 @@ public class Friend {
     private long userId;
 
     @Id
-    private long friendId; //可能为空，平台的id不一致
-    private String friendName;
-    private String nickname;
-    private String avatar;
-    @Generated(hash = 1981922013)
-    public Friend(long userId, long friendId, String friendName, String nickname,
-            String avatar) {
+    private long fr_id;
+    private String fr_frusername;
+    private String fr_remark;
+    private long fr_fgid;
+    @Generated(hash = 666880776)
+    public Friend(long userId, long fr_id, String fr_frusername, String fr_remark,
+            long fr_fgid) {
         this.userId = userId;
-        this.friendId = friendId;
-        this.friendName = friendName;
-        this.nickname = nickname;
-        this.avatar = avatar;
+        this.fr_id = fr_id;
+        this.fr_frusername = fr_frusername;
+        this.fr_remark = fr_remark;
+        this.fr_fgid = fr_fgid;
     }
     @Generated(hash = 287143722)
     public Friend() {
@@ -35,30 +35,31 @@ public class Friend {
     public void setUserId(long userId) {
         this.userId = userId;
     }
-    public long getFriendId() {
-        return this.friendId;
+    public long getFr_id() {
+        return this.fr_id;
     }
-    public void setFriendId(long friendId) {
-        this.friendId = friendId;
+    public void setFr_id(long fr_id) {
+        this.fr_id = fr_id;
     }
-    public String getFriendName() {
-        return this.friendName;
+    public String getFr_frusername() {
+        return this.fr_frusername;
     }
-    public void setFriendName(String friendName) {
-        this.friendName = friendName;
+    public void setFr_frusername(String fr_frusername) {
+        this.fr_frusername = fr_frusername;
     }
-    public String getNickname() {
-        return this.nickname;
+    public String getFr_remark() {
+        return this.fr_remark;
     }
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setFr_remark(String fr_remark) {
+        this.fr_remark = fr_remark;
     }
-    public String getAvatar() {
-        return this.avatar;
+    public long getFr_fgid() {
+        return this.fr_fgid;
     }
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setFr_fgid(long fr_fgid) {
+        this.fr_fgid = fr_fgid;
     }
+
 
 
 }
