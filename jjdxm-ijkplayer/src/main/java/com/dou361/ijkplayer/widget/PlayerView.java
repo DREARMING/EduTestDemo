@@ -1296,10 +1296,10 @@ public class PlayerView {
      * 开始播放
      */
     public PlayerView startPlay() {
-        if (!checkUrl(currentUrl)) {
+        /*if (!checkUrl(currentUrl)) {
             hideAllUI();
             return this;
-        }
+        }*/
         if (isLive) {
             videoThreadPool.execute(new Runnable() {
                 @Override
@@ -1332,7 +1332,7 @@ public class PlayerView {
                 query.id(R.id.app_video_freeTie).visible();
             } else {
                 if (playerSupport) {
-                    query.id(R.id.app_video_loading).visible();
+                    //query.id(R.id.app_video_loading).visible();
                     videoView.start();
                 } else {
                     showStatus(mActivity.getResources().getString(R.string.not_support));
@@ -1912,6 +1912,7 @@ public class PlayerView {
             } else {
                 status = PlayStateParams.STATE_PLAYING;
             }
+            query.id(R.id.app_video_loading).visibility(View.GONE);
             /**视频缓冲结束后隐藏缩列图*/
             mHandler.postDelayed(new Runnable() {
                 @Override

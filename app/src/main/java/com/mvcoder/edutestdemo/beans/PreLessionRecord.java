@@ -23,6 +23,7 @@ public class PreLessionRecord {
     //备课参与人
     private List<User> memberList;
 
+    private List<MResource> resourceList;
 
     //备课过程中，产生的文件存放的路径
     private String fileDir;
