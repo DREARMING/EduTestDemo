@@ -18,14 +18,15 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".ChatActivity" />
-        <activity android:name=".LiveActivity" />
         <activity
             android:name=".TestOrientationActivity"
             android:configChanges="keyboard|screenSize|orientation" />
         <activity android:name=".TestActivity">
 
         </activity>
-        <activity android:name=".PlayerActivity">
+        <activity android:name=".PlayerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     private void joinToLiveActivity() {
-        Intent intent = new Intent(this, LiveActivity.class);
+        Intent intent = new Intent(this, PlayerActivity.class);
         startActivity(intent);
     }
 

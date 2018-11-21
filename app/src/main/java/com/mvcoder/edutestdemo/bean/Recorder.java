@@ -22,7 +22,6 @@ public class Recorder {
     }
 
     public Recorder(float time, String filePath) {
-        super();
         this.time = time;
         this.filePath = filePath;
     }

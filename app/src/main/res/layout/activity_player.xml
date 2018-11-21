@@ -2,18 +2,31 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constrantLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.mvcoder.edutestdemo.PlayerActivity">
 
-    <com.dou361.ijkplayer.widget.VideoComponent
+    <!--<com.dou361.ijkplayer.widget.VideoComponent
         android:id="@+id/videoComponent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintDimensionRatio="H,16:9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-    </com.dou361.ijkplayer.widget.VideoComponent>
+    </com.dou361.ijkplayer.widget.VideoComponent>-->
+
+
+    <com.mvcoder.medialib.player.TYPlayer
+        android:id="@+id/player"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@android:color/black"
+        app:layout_constraintDimensionRatio="H,16:9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </com.mvcoder.medialib.player.TYPlayer>
 
 </android.support.constraint.ConstraintLayout>
