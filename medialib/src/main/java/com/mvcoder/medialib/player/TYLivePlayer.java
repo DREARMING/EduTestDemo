@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.mvcoder.medialib.R;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
-public class TYPlayer extends StandardGSYVideoPlayer {
+public class TYLivePlayer extends StandardGSYVideoPlayer {
 
     //调整进度时的类似弹窗的View
     private View mProgressView;
@@ -25,15 +25,15 @@ public class TYPlayer extends StandardGSYVideoPlayer {
     private Animation mShowAnimation;
     private Animation mHideAnimation;
 
-    public TYPlayer(Context context, Boolean fullFlag) {
+    public TYLivePlayer(Context context, Boolean fullFlag) {
         super(context, fullFlag);
     }
 
-    public TYPlayer(Context context) {
+    public TYLivePlayer(Context context) {
         super(context);
     }
 
-    public TYPlayer(Context context, AttributeSet attrs) {
+    public TYLivePlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -46,6 +46,11 @@ public class TYPlayer extends StandardGSYVideoPlayer {
     private void initAnimation() {
         mShowAnimation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
         mHideAnimation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out);
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.video_layout_standard_live;
     }
 
     @Override
@@ -73,6 +78,19 @@ public class TYPlayer extends StandardGSYVideoPlayer {
             mBrightnessView.startAnimation(mHideAnimation);
             mBrightnessView.setVisibility(GONE);
         }
+    }
+
+    private boolean isLive = true;
+
+
+    @Override
+    protected void touchSurfaceMoveFullLogic(float absDeltaX, float absDeltaY) {
+        if(absDeltaX > mThreshold || absDeltaY > mThreshold){
+            if(absDeltaX >= mThreshold){
+                if(mProgressBar == null) return;
+            }
+        }
+        super.touchSurfaceMoveFullLogic(absDeltaX, absDeltaY);
     }
 
     @Override
@@ -119,60 +137,13 @@ public class TYPlayer extends StandardGSYVideoPlayer {
 
     @Override
     protected void showProgressDialog(float deltaX, String seekTime, int seekTimePosition, String totalTime, int totalTimeDuration) {
-        if (mProgressView == null) {
-            View localView = LayoutInflater.from(getActivityContext()).inflate(getProgressDialogLayoutId(), null);
-            if (localView.findViewById(getProgressDialogProgressId()) instanceof ProgressBar) {
-                mDialogProgressBar = ((ProgressBar) localView.findViewById(getProgressDialogProgressId()));
-                if (mDialogProgressBarDrawable != null) {
-                    mDialogProgressBar.setProgressDrawable(mDialogProgressBarDrawable);
-                }
-            }
-            if (localView.findViewById(getProgressDialogCurrentDurationTextId()) instanceof TextView) {
-                mDialogSeekTime = ((TextView) localView.findViewById(getProgressDialogCurrentDurationTextId()));
-            }
-            if (localView.findViewById(getProgressDialogAllDurationTextId()) instanceof TextView) {
-                mDialogTotalTime = ((TextView) localView.findViewById(getProgressDialogAllDurationTextId()));
-            }
-            if (localView.findViewById(getProgressDialogImageId()) instanceof ImageView) {
-                mDialogIcon = ((ImageView) localView.findViewById(getProgressDialogImageId()));
-            }
-
-            addView(localView, -1, -1);
-            mProgressView = localView;
-        }
-        if(mProgressView.getVisibility() != VISIBLE){
-            mProgressView.setVisibility(VISIBLE);
-            mProgressView.startAnimation(mShowAnimation);
-        }
-        if (mDialogSeekTime != null) {
-            mDialogSeekTime.setText(seekTime);
-        }
-        if (mDialogTotalTime != null) {
-            mDialogTotalTime.setText(" / " + totalTime);
-        }
-        if (totalTimeDuration > 0)
-            if (mDialogProgressBar != null) {
-                mDialogProgressBar.setProgress(seekTimePosition * 100 / totalTimeDuration);
-            }
-        if (deltaX > 0) {
-            if (mDialogIcon != null) {
-                mDialogIcon.setBackgroundResource(R.drawable.video_forward_icon);
-            }
-        } else {
-            if (mDialogIcon != null) {
-                mDialogIcon.setBackgroundResource(R.drawable.video_backward_icon);
-            }
-        }
+        if(isLive) return;
     }
 
 
     @Override
     protected void dismissProgressDialog() {
-        //super.dismissProgressDialog();
-        if(mProgressView != null && mProgressView.getVisibility() == VISIBLE){
-            mProgressView.setVisibility(GONE);
-            mProgressView.startAnimation(mHideAnimation);
-        }
+        if(isLive) return;
     }
 
     @Override
