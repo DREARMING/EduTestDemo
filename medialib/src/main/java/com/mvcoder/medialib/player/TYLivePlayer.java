@@ -2,6 +2,7 @@ package com.mvcoder.medialib.player;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -11,7 +12,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mvcoder.medialib.R;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+
+import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 public class TYLivePlayer extends StandardGSYVideoPlayer {
 
@@ -19,6 +23,8 @@ public class TYLivePlayer extends StandardGSYVideoPlayer {
     private View mProgressView;
     private View mVolumnView;
     private ImageView mIvVolumn;
+
+    private TextView tvErrorTip;
 
     private View mBrightnessView;
 
@@ -40,6 +46,8 @@ public class TYLivePlayer extends StandardGSYVideoPlayer {
     @Override
     protected void init(Context context) {
         super.init(context);
+        tvErrorTip = findViewById(R.id.video_tv_error_tip);
+        tvErrorTip.setVisibility(GONE);
         initAnimation();
     }
 
@@ -51,6 +59,70 @@ public class TYLivePlayer extends StandardGSYVideoPlayer {
     @Override
     public int getLayoutId() {
         return R.layout.video_layout_standard_live;
+    }
+
+    @Override
+    public void onInfo(int what, int extra) {
+        super.onInfo(what, extra);
+        Log.d("Play", "onInfo : what : " + what + " , extra : " + extra);
+    }
+
+    @Override
+    public void onError(int what, int extra) {
+        Log.d("Play", "onError : what : " + what + " , extra : " + extra);
+        switch (what) {
+            case -192:
+            case IMediaPlayer.MEDIA_ERROR_TIMED_OUT:
+                //准备、缓冲的超时时间，内部GSYVideoManager管理
+                tvErrorTip.setText("加载超时，请检查网络");
+                break;
+            case IMediaPlayer.MEDIA_ERROR_SERVER_DIED:
+                tvErrorTip.setText("服务器不可访问，请检查");
+                break;
+            default: {
+                if(!NetworkUtils.isAvailable(getContext())){
+                    tvErrorTip.setText("网络连接断开，请检查网络设置");
+                }else {
+                    tvErrorTip.setText("发生了点错误，请重试");
+                }
+            }
+                break;
+        }
+        super.onError(what, extra);
+    }
+
+    @Override
+    protected void changeUiToClear() {
+        super.changeUiToClear();
+        tvErrorTip.setVisibility(INVISIBLE);
+    }
+
+
+    @Override
+    protected void changeUiToPreparingShow() {
+        super.changeUiToPreparingShow();
+        tvErrorTip.setVisibility(INVISIBLE);
+    }
+
+    @Override
+    protected void changeUiToPrepareingClear() {
+        super.changeUiToPrepareingClear();
+        tvErrorTip.setVisibility(INVISIBLE);
+    }
+
+
+
+    @Override
+    protected void changeUiToCompleteClear() {
+        super.changeUiToCompleteClear();
+        tvErrorTip.setVisibility(INVISIBLE);
+    }
+
+
+    @Override
+    protected void changeUiToError() {
+        super.changeUiToError();
+        tvErrorTip.setVisibility(VISIBLE);
     }
 
     @Override
@@ -85,9 +157,9 @@ public class TYLivePlayer extends StandardGSYVideoPlayer {
 
     @Override
     protected void touchSurfaceMoveFullLogic(float absDeltaX, float absDeltaY) {
-        if(absDeltaX > mThreshold || absDeltaY > mThreshold){
-            if(absDeltaX >= mThreshold){
-                if(mProgressBar == null) return;
+        if (absDeltaX > mThreshold || absDeltaY > mThreshold) {
+            if (absDeltaX >= mThreshold) {
+                if (mProgressBar == null) return;
             }
         }
         super.touchSurfaceMoveFullLogic(absDeltaX, absDeltaY);
@@ -103,23 +175,23 @@ public class TYLivePlayer extends StandardGSYVideoPlayer {
                     mDialogVolumeProgressBar.setProgressDrawable(mVolumeProgressDrawable);
                 }
             }
-            if(localView.findViewById(R.id.video_iv_volumn) instanceof ImageView){
+            if (localView.findViewById(R.id.video_iv_volumn) instanceof ImageView) {
                 mIvVolumn = localView.findViewById(R.id.video_iv_volumn);
             }
             mVolumnView = localView;
-            addView(mVolumnView, -1 , -1);
+            addView(mVolumnView, -1, -1);
         }
         if (mVolumnView.getVisibility() != VISIBLE) {
             mVolumnView.setVisibility(VISIBLE);
             mVolumnView.startAnimation(mShowAnimation);
         }
         if (mDialogVolumeProgressBar != null) {
-            if(mIvVolumn != null) {
+            if (mIvVolumn != null) {
                 if (volumePercent <= 0) {
                     mIvVolumn.setImageResource(R.mipmap.video_sound_none);
-                }else if(volumePercent > 0 && volumePercent < 40){
+                } else if (volumePercent > 0 && volumePercent < 40) {
                     mIvVolumn.setImageResource(R.mipmap.video_sound_1);
-                }else{
+                } else {
                     mIvVolumn.setImageResource(R.mipmap.video_sound);
                 }
             }
@@ -137,23 +209,23 @@ public class TYLivePlayer extends StandardGSYVideoPlayer {
 
     @Override
     protected void showProgressDialog(float deltaX, String seekTime, int seekTimePosition, String totalTime, int totalTimeDuration) {
-        if(isLive) return;
+        if (isLive) return;
     }
 
 
     @Override
     protected void dismissProgressDialog() {
-        if(isLive) return;
+        if (isLive) return;
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if(mShowAnimation.hasStarted()) {
+        if (mShowAnimation.hasStarted()) {
             mShowAnimation.cancel();
             mShowAnimation = null;
         }
-        if(mHideAnimation.hasStarted()){
+        if (mHideAnimation.hasStarted()) {
             mHideAnimation.cancel();
             mHideAnimation = null;
         }

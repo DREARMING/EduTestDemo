@@ -2,6 +2,9 @@ package com.mvcoder.edutestdemo;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -14,6 +17,7 @@ import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
+import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 
@@ -22,6 +26,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import tv.danmaku.ijk.media.exo2.Exo2PlayerManager;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class PlayerActivity extends AppCompatActivity {
@@ -38,6 +43,21 @@ public class PlayerActivity extends AppCompatActivity {
 
     private boolean isPlay = false;
     private boolean isPause = false;
+    private boolean isFirst = false;
+
+    private Handler mHandler = new Handler(Looper.getMainLooper()){
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 100:
+                    boolean isHardAccelerated = constraintLayout.isHardwareAccelerated();
+                    LogUtil.d("is Hard enable " + isHardAccelerated);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +73,10 @@ public class PlayerActivity extends AppCompatActivity {
 
     private final static String rtmpUrl2 = "rtmp://192.168.3.26/live/stream";
 
+
     private void initView() {
+
+
         /*VideoConfiguration configuration = new VideoConfiguration();
         configuration.setVideoId("1");
         configuration.setPosition(new Position());
@@ -74,9 +97,14 @@ public class PlayerActivity extends AppCompatActivity {
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
 
-//        GSYVideoType.TEXTURE
-        initOption(rtmpUrl2);
+        //用exo来做播放器
+        PlayerFactory.setPlayManager(Exo2PlayerManager.class);
 
+        //CacheFactory.setCacheManager(ExoPlayerCacheManager.class);//exo缓存模式，支持m3u8，只支持exo
+        //CacheFactory.setCacheManager(ProxyCacheManager.class);//代理缓存模式，支持所有模式，不支持m3u8等
+
+
+        //initOption(rtmpUrl2);
         GSYVideoOptionBuilder optionBuilder = new GSYVideoOptionBuilder();
         optionBuilder.setUrl(rtmpUrl2)
                 .setVideoTitle("千图网")
@@ -109,6 +137,8 @@ public class PlayerActivity extends AppCompatActivity {
                     public void onPlayError(String url, Object... objects) {
                         super.onPlayError(url, objects);
                         LogUtil.d("on Play Error");
+                        //player.release();
+                        //player.startPlayLogic();
                     }
 
                 })
@@ -133,6 +163,8 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
 
+        GSYVideoManager.instance();
+
     }
 
 
@@ -140,7 +172,10 @@ public class PlayerActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(url) || url.length() < 14) return;
         List<VideoOptionModel> list = new ArrayList<>();
         VideoOptionModel videoOptionModel =  null;
-        //硬解码支持
+        GSYVideoType.enableMediaCodec();
+        GSYVideoType.enableMediaCodecTexture();
+
+        //硬解码支持,硬件解码关闭后，一定要开启软解码
         boolean isMediaCodec = GSYVideoType.isMediaCodec();
         if(isMediaCodec) {
             videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_CODEC, "mediacodec", 1);
@@ -148,6 +183,14 @@ public class PlayerActivity extends AppCompatActivity {
             videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_CODEC, "mediacodec", 0);
         }
         list.add(videoOptionModel);
+        if(isMediaCodec){
+            //mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "videotoolbox", 0);
+            videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_CODEC,"videotoolbox", 0);
+        }else{
+            videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_CODEC,"videotoolbox", 1);
+        }
+        list.add(videoOptionModel);
+
         //rtsp支持
         String prefix = url.substring(0,url.indexOf(":"));
         if("rtsp".equalsIgnoreCase(prefix)) {
@@ -157,16 +200,18 @@ public class PlayerActivity extends AppCompatActivity {
             list.add(videoOptionModel);
         }
 
-        boolean isLive = false;
-        if(prefix.equalsIgnoreCase("rtmp") || prefix.equalsIgnoreCase("rtsp") || isHls(url)){
-            isLive = true;
+        boolean isRTMPOrRTSP = false;
+        if(prefix.equalsIgnoreCase("rtmp") || prefix.equalsIgnoreCase("rtsp")){
+            isRTMPOrRTSP = true;
         }
 
-        if(isLive) {
+        if(isRTMPOrRTSP) {
             // ----------------直播设置 start------------------
             videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100);
             list.add(videoOptionModel);
-            videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 10240);
+
+            //probesize设置不够大，很容易造成黑屏有声
+            videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 102400);
             list.add(videoOptionModel);
             videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1);
             list.add(videoOptionModel);
@@ -181,79 +226,26 @@ public class PlayerActivity extends AppCompatActivity {
             //不确定有没有用
             videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
             list.add(videoOptionModel);
+
+            videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48);
+            list.add(videoOptionModel);
+
+            videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "buffer_size", 1316);
+            list.add(videoOptionModel);
+
+            //这个在hls里面不能设置，会造成无法播放
+            videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "reconnect", 3);
+            list.add(videoOptionModel);
+
             //-------------------直播设置 end-----------------------------------
         }
 
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "reconnect", 3);
-        list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "allowed_media_types", "video"); //根据媒体类型来配置
         list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", 20000);
         list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "buffer_size", 1316);
-        list.add(videoOptionModel);
+
         GSYVideoManager.instance().setOptionModelList(list);
-       /* GSYVideoManager.instance().setListener(new GSYMediaPlayerListener() {
-            @Override
-            public void onPrepared() {
-
-            }
-
-            @Override
-            public void onAutoCompletion() {
-
-            }
-
-            @Override
-            public void onCompletion() {
-
-            }
-
-            @Override
-            public void onBufferingUpdate(int percent) {
-
-            }
-
-            @Override
-            public void onSeekComplete() {
-
-            }
-
-            @Override
-            public void onError(int what, int extra) {
-
-            }
-
-            @Override
-            public void onInfo(int what, int extra) {
-
-            }
-
-            @Override
-            public void onVideoSizeChanged() {
-
-            }
-
-            @Override
-            public void onBackFullscreen() {
-
-            }
-
-            @Override
-            public void onVideoPause() {
-
-            }
-
-            @Override
-            public void onVideoResume() {
-
-            }
-
-            @Override
-            public void onVideoResume(boolean seek) {
-
-            }
-        });*/
     }
 
     private boolean isHls(String url){
@@ -273,6 +265,7 @@ public class PlayerActivity extends AppCompatActivity {
         player.getCurrentPlayer().onVideoResume(false);
         super.onResume();
         isPause = false;
+        mHandler.sendEmptyMessageDelayed(100, 100);
     }
 
     @Override
